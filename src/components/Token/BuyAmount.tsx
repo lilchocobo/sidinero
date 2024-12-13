@@ -10,10 +10,6 @@ interface BuyAmountProps {
   hasInsufficientFunds?: boolean;
 }
 
-// Denominated in ETH
-const useBTokenPrice = () => {
-  return 0.000001
-}
 
 
 export function BuyAmount({ 
@@ -24,34 +20,37 @@ export function BuyAmount({
   tokenAmount
 }: BuyAmountProps) {
   const { balance } = useBalance();
-
-  
   const hasInsufficientFunds = amount > balance;
 
-  console.log({tokenAmount, amount, amountUSD})
-
-
   return (
-    <div className="flex flex-col items-center text-center px-4">
-      <div className="relative w-full mb-2">
-        <div className="relative">
-          <span className="absolute left-0 top-1/2 -translate-y-1/2 text-4xl font-bold text-white">$</span>
+    <div className="flex flex-col items-center gap-8 py-4 mb-4">
+      {/* Amount Input Section */}
+      <div className="relative w-full">
+        <div className="relative flex items-center justify-center">
+          <span className="absolute left-1/2 -translate-x-[160px] text-6xl font-bold text-white">$</span>
           <input
             type="number"
             value={amountUSD.toString()}
             onChange={(e) => onChange(e.target.value)}
             placeholder="0"
-            className="w-full bg-transparent text-4xl font-bold text-white placeholder-white/30 outline-none text-center pl-8"
+            className="w-full bg-transparent text-6xl font-bold text-white placeholder-white/30 outline-none text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             aria-label="Amount to buy"
           />
         </div>
-        <div className="mt-2 text-sm text-white/70">
-          {hasInsufficientFunds ? (
-            <span className="text-red-400">Insufficient funds</span>
-          ) : (
-            `You'll receive ${formatNumber(tokenAmount)} ${tokenSymbol}`
-          )}
-        </div>
+      </div>
+
+      {/* Token Amount Display */}
+      <div>
+        {hasInsufficientFunds ? (
+          <span className="text-red-400 text-xl">Insufficient funds</span>
+        ) : (
+          <div className="text-center">
+            <div className="text-white/50 text-lg mb-2">You'll receive</div>
+            <div className="text-white font-semibold text-2xl">
+              {formatNumber(tokenAmount)} {tokenSymbol}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

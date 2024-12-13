@@ -3,9 +3,18 @@ import React, { useState, useRef, useEffect } from 'react';
 interface SlideToLaunchProps {
   onComplete: () => void;
   hasInsufficientFunds?: boolean;
+  defaultText?: string;
+  successText?: string;
+  errorText?: string;
 }
 
-export function SlideToLaunch({ onComplete, hasInsufficientFunds }: SlideToLaunchProps) {
+export function SlideToLaunch({ 
+  onComplete, 
+  hasInsufficientFunds,
+  defaultText = 'SLIDE TO LAUNCH',
+  successText = 'LAUNCHING...',
+  errorText = 'INSUFFICIENT FUNDS'
+}: SlideToLaunchProps) {
   const [position, setPosition] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
@@ -85,7 +94,7 @@ export function SlideToLaunch({ onComplete, hasInsufficientFunds }: SlideToLaunc
       <div className={`absolute inset-0 flex items-center justify-end pr-12 font-bold ${
         hasInsufficientFunds ? 'text-red-400' : 'text-black'
       }`}>
-        {hasInsufficientFunds ? 'INSUFFICIENT FUNDS' : (isCompleted ? 'LAUNCHING...' : 'SLIDE TO LAUNCH')}
+        {hasInsufficientFunds ? errorText : (isCompleted ? successText : defaultText)}
       </div>
       <div
         onMouseDown={hasInsufficientFunds ? undefined : handleDragStart}

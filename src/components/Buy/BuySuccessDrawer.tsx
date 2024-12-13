@@ -64,6 +64,13 @@ export function BuySuccessDrawer({
               </div>
 
               <div className="relative z-10 flex flex-col items-center w-full max-w-md mx-auto">
+                {/* Add token image */}
+                <img 
+                  src={token.metadata.image} 
+                  alt={`${token.symbol} token`}
+                  className="w-24 h-24 rounded-full mb-6 shadow-lg"
+                />
+
                 <TokenPurchaseDetails 
                   amount={tokenAmount.toString()}
                   token={token}
@@ -81,7 +88,7 @@ export function BuySuccessDrawer({
                   onShare={handleShare}
                   onHome={() => {
                     onClose();
-                    navigate('/');
+                    navigate('/portfolio');
                   }}
                 />
               </div>

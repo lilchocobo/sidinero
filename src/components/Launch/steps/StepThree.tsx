@@ -59,8 +59,11 @@ export function StepThree({ tokenDetails, setTokenDetails, onClose }: StepThreeP
         },
       });
 
+      console.log({tx})
+
       // Fetch transaction receipt using viem
-      const receipt = await client?.getTransactionReceipt({ hash: tx });
+      const receipt = await client?.waitForTransactionReceipt({ hash: tx });
+      console.log({receipt})
       const logs = receipt?.logs
 
       // Filter logs by address
@@ -145,8 +148,10 @@ export function StepThree({ tokenDetails, setTokenDetails, onClose }: StepThreeP
       <div className="mt-8">
         <SlideToLaunch
           onComplete={handleLaunchComplete}
-          className="bg-green-400 hover:bg-green-500 text-black font-medium rounded-full px-6 py-3 w-full"
-        />
+          defaultText="SLIDE TO LAUNCH"
+          successText="LAUNCHING..."
+          errorText="CANNOT LAUNCH"
+       />
       </div>
     </div>
   );

@@ -55,7 +55,7 @@ export function BuyDrawer({ isOpen, onClose, price, token }: BuyDrawerProps) {
 
 
     const valueUSD = value * conversionRate
-    setAmountUSD(valueUSD)
+    setAmountUSD(valueUSD.toFixed(2))
   }, [balance, setAmount]);
 
   console.log({ balance, balanceUSD });
@@ -78,7 +78,7 @@ export function BuyDrawer({ isOpen, onClose, price, token }: BuyDrawerProps) {
         <Drawer.Portal>
           <Drawer.Overlay className="fixed inset-0 bg-black/40" />
           <Drawer.Content
-            className="bg-purple-600 flex flex-col rounded-t-[32px] fixed bottom-0 left-0 right-0 h-[400px]"
+            className="bg-purple-600 flex flex-col rounded-t-[32px] fixed bottom-0 left-0 right-0 h-[500px]"
             aria-label="Buy Token"
           >
             <Drawer.Title className="sr-only">Buy Token</Drawer.Title>
@@ -144,6 +144,9 @@ export function BuyDrawer({ isOpen, onClose, price, token }: BuyDrawerProps) {
                 <div className="col-span-3">
                   <SlideToLaunch 
                     onComplete={handleBuyComplete} 
+                    defaultText="SLIDE TO BUY"
+                    successText="BUYING..."
+                    errorText="INSUFFICIENT FUNDS"
                     hasInsufficientFunds={amount > balance}
                   />
                 </div>
