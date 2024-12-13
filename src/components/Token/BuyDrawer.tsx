@@ -114,6 +114,7 @@ export function BuyDrawer({ isOpen, onClose, price, token }: BuyDrawerProps) {
                   tokenAmount={tokenAmount}
                   onChange={handleAmountChange}
                   tokenSymbol={token.symbol}
+                  tokenImage={token.metadata.image}
                 />
               </div>
 

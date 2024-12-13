@@ -7,6 +7,7 @@ interface BuyAmountProps {
   tokenAmount: number;
   onChange: (value: string) => void;
   tokenSymbol: string;
+  tokenImage: string;
   hasInsufficientFunds?: boolean;
 }
 
@@ -17,7 +18,8 @@ export function BuyAmount({
   amountUSD, 
   onChange, 
   tokenSymbol,
-  tokenAmount
+  tokenAmount,
+  tokenImage
 }: BuyAmountProps) {
   const { balance } = useBalance();
   const hasInsufficientFunds = amount > balance;
@@ -46,8 +48,13 @@ export function BuyAmount({
         ) : (
           <div className="text-center">
             <div className="text-white/50 text-lg mb-2">You'll receive</div>
-            <div className="text-white font-semibold text-2xl">
-              {formatNumber(tokenAmount)} {tokenSymbol}
+            <div className="flex items-center justify-center  ">
+              {/* <div className="text-white font-semibold text-2xl">
+                <img src={tokenImage} alt={tokenSymbol} className=" rounded-full w-6 h-6" />
+              </div> */}
+              <div className="text-white/50 text-lg ml-2">
+                {formatNumber(tokenAmount * 1.01)} {tokenSymbol}
+              </div>
             </div>
           </div>
         )}
