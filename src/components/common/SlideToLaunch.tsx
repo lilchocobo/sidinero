@@ -2,9 +2,10 @@ import React, { useState, useRef, useEffect } from 'react';
 
 interface SlideToLaunchProps {
   onComplete: () => void;
+  hasInsufficientFunds?: boolean;
 }
 
-export function SlideToLaunch({ onComplete }: SlideToLaunchProps) {
+export function SlideToLaunch({ onComplete, hasInsufficientFunds }: SlideToLaunchProps) {
   const [position, setPosition] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
@@ -69,27 +70,34 @@ export function SlideToLaunch({ onComplete }: SlideToLaunchProps) {
     <div 
       ref={containerRef}
       style={{
-        borderColor: `rgb(${Math.round(22 * (1 - progressPercentage/100) + 34 * (progressPercentage/100))}, 
-                         ${Math.round(22 * (1 - progressPercentage/100) + 197 * (progressPercentage/100))}, 
-                         ${Math.round(22 * (1 - progressPercentage/100) + 94 * (progressPercentage/100))})`,
+        borderColor: hasInsufficientFunds 
+          ? 'rgb(248, 113, 113)' // red-400
+          : `rgb(${Math.round(22 * (1 - progressPercentage/100) + 34 * (progressPercentage/100))}, 
+               ${Math.round(22 * (1 - progressPercentage/100) + 197 * (progressPercentage/100))}, 
+               ${Math.round(22 * (1 - progressPercentage/100) + 94 * (progressPercentage/100))})`,
       }}
-      className="relative h-16 bg-gradient-to-r from-green-400/50 to-green-400/100 rounded-full overflow-hidden border-2"
+      className={`relative h-16 rounded-full overflow-hidden border-2 ${
+        hasInsufficientFunds 
+          ? 'bg-red-400/20' 
+          : 'bg-gradient-to-r from-green-400/50 to-green-400/100'
+      }`}
     >
-      <div 
-        className="absolute inset-0 flex items-center justify-end pr-12 text-black font-bold"
-      >
-        {isCompleted ? 'LAUNCHING...' : 'SLIDE TO LAUNCH'}
+      <div className={`absolute inset-0 flex items-center justify-end pr-12 font-bold ${
+        hasInsufficientFunds ? 'text-red-400' : 'text-black'
+      }`}>
+        {hasInsufficientFunds ? 'INSUFFICIENT FUNDS' : (isCompleted ? 'LAUNCHING...' : 'SLIDE TO LAUNCH')}
       </div>
       <div
-        onMouseDown={handleDragStart}
-        onTouchStart={handleDragStart}
+        onMouseDown={hasInsufficientFunds ? undefined : handleDragStart}
+        onTouchStart={hasInsufficientFunds ? undefined : handleDragStart}
         style={{ 
           transform: `translateX(${position}px)`,
           transition: isCompleted ? 'none' : position === 0 ? 'transform 0.2s ease-out' : 'none'
         }}
         className={`absolute left-0 top-0 bottom-0 w-16 flex items-center justify-center 
-          bg-green-400 rounded-full cursor-grab transition-colors
+          rounded-full cursor-grab transition-colors
           ${isDragging ? 'cursor-grabbing' : ''}
+          ${hasInsufficientFunds ? 'bg-red-400' : 'bg-green-400'}
           ${isCompleted ? 'bg-green-500' : ''}`}
       >
         <img src="/svg/devil.svg" alt="arrow-right" className="w-16 h-16" />

@@ -50,12 +50,10 @@ export function Portfolio() {
   const [underlineStyle, setUnderlineStyle] = useState({ left: 0, width: 0 });
   const holdingsRef = useRef<HTMLButtonElement>(null);
   const tokensRef = useRef<HTMLButtonElement>(null);
-  
+
   const { address } = useAccount();
 
-  const { balance, balanceUSD } = useBalance({
-    address: address,
-  });
+  const { balance, balanceUSD } = useBalance(address as `0x${string}`);
 
   const [showUSD, setShowUSD] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -68,11 +66,11 @@ export function Portfolio() {
     if (activeButton) {
       const parentElement = activeButton.parentElement;
       const containerElement = parentElement?.parentElement?.parentElement;
-      
+
       if (parentElement && containerElement) {
         const parentRect = parentElement.getBoundingClientRect();
         const containerRect = containerElement.getBoundingClientRect();
-        
+
         setUnderlineStyle({
           left: parentRect.left - containerRect.left,
           width: parentRect.width,
@@ -161,9 +159,8 @@ export function Portfolio() {
           <div className="relative">
             <button
               ref={holdingsRef}
-              className={`px-2 py-2 font-semibold ${
-                activeTab === 'holdings' ? 'text-white' : 'text-white/60'
-              }`}
+              className={`px-2 py-2 font-semibold ${activeTab === 'holdings' ? 'text-white' : 'text-white/60'
+                }`}
               onClick={() => handleTabChange('holdings')}
             >
               <span>Your Holdings</span>
@@ -172,16 +169,15 @@ export function Portfolio() {
           <div className="relative">
             <button
               ref={tokensRef}
-              className={`px-2 py-2 font-semibold ${
-                activeTab === 'tokens' ? 'text-white' : 'text-white/60'
-              }`}
+              className={`px-2 py-2 font-semibold ${activeTab === 'tokens' ? 'text-white' : 'text-white/60'
+                }`}
               onClick={() => handleTabChange('tokens')}
             >
               Your Tokens
             </button>
           </div>
         </div>
-        <div 
+        <div
           className="absolute h-0.5 bg-violet-500 transition-all duration-300 rounded-full"
           style={{
             bottom: 0,
@@ -194,9 +190,8 @@ export function Portfolio() {
       <div className="relative overflow-hidden h-[calc(100vh-300px)]">
         {/* Holdings List */}
         <div
-          className={`absolute w-full transition-transform duration-300 ease-in-out ${
-            isAnimating ? 'pointer-events-none' : ''
-          }`}
+          className={`absolute w-full transition-transform duration-300 ease-in-out ${isAnimating ? 'pointer-events-none' : ''
+            }`}
           style={{
             transform: `translateX(${activeTab === 'holdings' ? '0' : '-110%'})`
           }}
@@ -206,9 +201,8 @@ export function Portfolio() {
 
         {/* Tokens List */}
         <div
-          className={`absolute w-full transition-transform duration-300 ease-in-out ${
-            isAnimating ? 'pointer-events-none' : ''
-          }`}
+          className={`absolute w-full transition-transform duration-300 ease-in-out ${isAnimating ? 'pointer-events-none' : ''
+            }`}
           style={{
             transform: `translateX(${activeTab === 'tokens' ? '0' : '110%'})`
           }}

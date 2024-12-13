@@ -15,6 +15,7 @@ import { usePrivy } from '@privy-io/react-auth';
 import { WelcomeScreen } from './components/Auth/WelcomeScreen';
 import { TokensPage } from './pages/TokensPage';
 import { TokenPage } from './pages/TokenPage';
+import { BuyDrawerProvider } from './context/BuyDrawerContext';
 
 function AppContent() {
   const { authenticated } = usePrivy();
@@ -44,8 +45,10 @@ export default function App() {
           <WagmiProvider config={config}>
             <AuthProvider>
               <TransactionsProvider>
-                <AppContent />
-                <Toaster position="top-center" />
+                <BuyDrawerProvider>
+                  <AppContent />
+                  <Toaster position="top-center" />
+                </BuyDrawerProvider>
               </TransactionsProvider>
             </AuthProvider>
           </WagmiProvider>

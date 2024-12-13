@@ -1,6 +1,7 @@
 import { useTokenData } from '../hooks/useTokenData';
 import { useNavigate } from 'react-router-dom';
 import { TokenConfig, useTokens } from '../hooks/useTokens';
+import { useBuyDrawer } from '../context/BuyDrawerContext';
 
 export function TokensPage() {
   const { tokens, isLoading, error } = useTokens();
@@ -28,8 +29,14 @@ export function TokensPage() {
 
 function TokenCard({ token }: { token: TokenConfig }) {
   const navigate = useNavigate();
+  const { openBuyDrawer } = useBuyDrawer();
   const tokenAddress = token.address as `0x${string}`;
-  const { name, symbol, isLoading, isError } = useTokenData(tokenAddress);
+  const { data: tokenData, isLoading, isError } = useTokenData(tokenAddress);
+
+  const name = tokenData?.name;
+  const symbol = tokenData?.symbol;
+  const image = tokenData?.metadata.image;
+
 
   if (isLoading) {
     return (
@@ -42,12 +49,18 @@ function TokenCard({ token }: { token: TokenConfig }) {
           </div>
         </div>
       </div>
-    );
+    );  
   }
 
   if (isError) {
     return null;
   }
+
+  const handleBuyClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigate(`/token/${tokenAddress}`);
+    openBuyDrawer(tokenAddress);
+  };
 
   return (
     <div className="bg-purple-900/20 rounded-xl p-4 flex items-center justify-between hover:bg-purple-900/30 transition-all cursor-pointer"
@@ -76,10 +89,7 @@ function TokenCard({ token }: { token: TokenConfig }) {
         </div>
         <button 
           className="bg-[#b4ff00] text-black px-4 py-1.5 rounded-full font-medium"
-          onClick={(e) => {
-            e.stopPropagation();
-            // Add buy logic here
-          }}
+          onClick={handleBuyClick}
         >
           BUY
         </button>

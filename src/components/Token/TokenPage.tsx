@@ -1,32 +1,32 @@
 import { Settings, Crown, Twitter, Send } from 'lucide-react';
 import { LineChart } from './LineChart';
 import { usePrivy } from '@privy-io/react-auth';
-import { useTokenData } from '../../hooks/useTokenData';
-import { TokenConfig } from '../../hooks/useTokens';
-import { useState } from 'react';
+import { TokenData, useTokenData } from '../../hooks/useTokenData';
 import { BuyDrawer } from './BuyDrawer';
+import { useBuyDrawer } from '../../context/BuyDrawerContext';
 
 interface TokenPageProps {
-  token: TokenConfig; 
+  token: TokenData | undefined; 
 }
 
 export function TokenPage({ token }: TokenPageProps) {
   const { login, authenticated } = usePrivy();
-  const { name, symbol, isLoading } = useTokenData(token.address);
-  const [isBuyDrawerOpen, setIsBuyDrawerOpen] = useState(false);
+  const { isOpen: isBuyDrawerOpen, openBuyDrawer, closeBuyDrawer } = useBuyDrawer();
 
   // Add basic loading state
-  if (isLoading) {
+  if (!token) {
     return <div>Loading...</div>;
   }
+
+  console.log({token})
 
   const handleBuyClick = () => {
     if (!authenticated) {
       login();
     } else {
-      setIsBuyDrawerOpen(true);
+      openBuyDrawer(token.address);
     }
-  };
+  };  
 
   return (
     <div className="h-full overflow-y-auto pb-40">
@@ -73,15 +73,15 @@ export function TokenPage({ token }: TokenPageProps) {
             <div className="flex items-center gap-4">
               <img
                 src={token.metadata.image}
-                alt={name}
+                alt={token.name}
                 className="w-14 h-14 rounded-full"
               />
               <div>
-                <div className="font-mono text-xl">${symbol}</div>
-                <div className="text-base text-white/70">{name}</div>
+                <div className="font-mono text-xl">${token.symbol}</div>
+                <div className="text-base text-white/70">{token.name}</div>
               </div>
             </div>
-            <p className="mt-3 text-lg">The official {name} token</p>
+            <p className="mt-3 text-lg">The official {token.name} token</p>
             <div className="flex gap-3 mt-4">
               <button className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
                 <Twitter className="w-6 h-6" />
@@ -95,7 +95,7 @@ export function TokenPage({ token }: TokenPageProps) {
           {authenticated && (
             <div className="bg-purple-500/50 backdrop-blur-sm p-6">
               <div className="text-white/70">You hold</div>
-              <div className="text-white font-mono text-2xl mt-1">48,841 ${symbol}</div>
+              <div className="text-white font-mono text-2xl mt-1">48,841 ${token.symbol}</div>
               <div className="text-white/70">0.0004 $USD</div>
             </div>
           )}
@@ -133,9 +133,9 @@ export function TokenPage({ token }: TokenPageProps) {
 
       <BuyDrawer 
         isOpen={isBuyDrawerOpen}
-        onClose={() => setIsBuyDrawerOpen(false)}
-        symbol={symbol || ''}
-        price="$0.81"
+        onClose={closeBuyDrawer}
+        price="$0.99"
+        token={token}
       />
     </div>
   );

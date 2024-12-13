@@ -1,10 +1,12 @@
-import { useBalance as useWagmiBalance } from 'wagmi';
+import { useAccount, useBalance as useWagmiBalance } from 'wagmi';
 
-export function useBalance({ address }: { address: `0x${string}` | undefined }) {
+export function useBalance(address?: `0x${string}`) {
+
+    const {address: userAddress} = useAccount()
 
     // Balance denominated in ETH
     const balance = useWagmiBalance({
-        address: address,
+        address: address ?? userAddress,
     });
 
     const balanceETH = Number(balance.data?.formatted);

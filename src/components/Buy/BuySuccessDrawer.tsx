@@ -5,12 +5,15 @@ import { TokenPurchaseDetails } from './TokenPurchaseDetails';
 import { ActionButtons } from './ActionButtons';
 import { ShareDrawer } from '../Share/ShareDrawer';
 import { useState } from 'react';
+import { TokenData } from '../../hooks/useTokenData';
 
 interface BuySuccessDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  tokenSymbol: string;
-  amount: string;
+  token: TokenData;
+  amount: number;
+  amountUSD: number;
+  tokenAmount: number;
   achievement?: {
     title: string;
     description: string;
@@ -20,8 +23,10 @@ interface BuySuccessDrawerProps {
 export function BuySuccessDrawer({ 
   isOpen, 
   onClose, 
-  tokenSymbol, 
+  token, 
   amount,
+  amountUSD,
+  tokenAmount,
   achievement 
 }: BuySuccessDrawerProps) {
   const navigate = useNavigate();
@@ -60,15 +65,15 @@ export function BuySuccessDrawer({
 
               <div className="relative z-10 flex flex-col items-center w-full max-w-md mx-auto">
                 <TokenPurchaseDetails 
-                  amount={amount}
-                  tokenSymbol={tokenSymbol}
+                  amount={tokenAmount.toString()}
+                  token={token}
                 />
 
                 {achievement && (
                   <Achievement 
                     title={achievement.title}
                     description={achievement.description}
-                    tokenSymbol={tokenSymbol}
+                    tokenSymbol={token.symbol}
                   />
                 )}
 
@@ -89,10 +94,10 @@ export function BuySuccessDrawer({
         isOpen={showShare}
         onClose={() => setShowShare(false)}
         data={{
-          title: `Just bought ${amount} $${tokenSymbol}! 🚀`,
-          description: achievement ? `${achievement.title} - ${achievement.description} $${tokenSymbol}` : `Joined the $${tokenSymbol} community!`,
+          title: `Just bought ${amount} $${token.symbol}! 🚀`,
+          description: achievement ? `${achievement.title} - ${achievement.description} $${token.symbol}` : `Joined the $${token.symbol} community!`,
           url: window.location.href,
-          image: '/svg/uppies_2.svg' // You can customize this
+          image: token.metadata.image // You can customize this
         }}
       />
     </>
